@@ -1,27 +1,23 @@
-# Sistema de Gestão de Cursos e Anotações
-
-Projeto completo com backend, frontend, Swagger e diagramas.
-
 PROJ_SCG – Sistema de Gestão de Cursos e Anotações dos Alunos:
 markdown
 Copiar
 Editar
+
 # PROJ_SCG - Sistema de Gestão de Cursos e Anotações dos Alunos
 
 Projeto fullstack para gerenciamento de cursos, anotações e desempenho dos alunos, com autenticação, bancos de dados relacional e não-relacional e interface moderna.
 
----
 
-##  Tecnologias Utilizadas
+Tecnologias Utilizadas
 
-###  Backend
+Backend
 - Node.js + Express
 - PostgreSQL (relacional)
 - MongoDB (não-relacional)
 - JWT para autenticação
 - Swagger para documentação da API
 
-### Frontend
+Frontend
 - React + Vite
 - React Router
 - Axios
@@ -30,7 +26,7 @@ Projeto fullstack para gerenciamento de cursos, anotações e desempenho dos alu
 
 ---
 
-##  Funcionalidades
+Funcionalidades
 
 - Autenticação com JWT (Login e Cadastro)
 - CRUD de cursos
@@ -42,9 +38,9 @@ Projeto fullstack para gerenciamento de cursos, anotações e desempenho dos alu
 
 ---
 
-## ⚙️ Como rodar o projeto localmente
+Como rodar o projeto localmente
 
-### 1. Clone o repositório
+ 1. Clone o repositório
 
 ```bash
 git clone https://github.com/wandersonthi/PROJ_SCG.git
