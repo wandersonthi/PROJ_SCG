@@ -1,54 +1,59 @@
 // frontend/src/App.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-const App: React.FC = () => {
-  const [data, setData] = useState<any>(null);
-  const [name, setName] = useState<string>('');
-  const [responseMessage, setResponseMessage] = useState<string>('');
+const App = () => {
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [mensagem, setMensagem] = useState('');
 
-  // Requisição GET para buscar a data do banco
-  useEffect(() => {
-    fetch('http://localhost:5000/')
-      .then((response) => response.json())
-      .then((data) => setData(data))
-      .catch((error) => console.error('Erro ao buscar dados:', error));
-  }, []);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/alunos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, email }),
+      });
 
-  // Função para enviar dados via POST para o backend
-  const submitData = () => {
-    fetch('http://localhost:5000/data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: name }),
-    })
-      .then((response) => response.json())
-      .then((data) => setResponseMessage(data.message))
-      .catch((error) => console.error('Erro:', error));
+      const data = await response.json();
+      setMensagem(`Aluno cadastrado com sucesso: ${data.nome}`);
+      setNome('');
+      setEmail('');
+    } catch (error) {
+      console.error(error);
+      setMensagem('Erro ao cadastrar aluno');
+    }
   };
 
   return (
-    <div>
-      <h1>Dados do Backend</h1>
-      {data ? (
+    <div style={{ maxWidth: 500, margin: '50px auto', fontFamily: 'sans-serif' }}>
+      <h1>Cadastro de Aluno</h1>
+      <form onSubmit={handleSubmit}>
         <div>
-          <p>Data do banco: {data.now}</p>
+          <label>Nome:</label>
+          <input
+            type="text"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px' }}
+          />
         </div>
-      ) : (
-        <p>Carregando...</p>
-      )}
-
-      <h2>Enviar dados para o backend</h2>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Digite seu nome"
-      />
-      <button onClick={submitData}>Enviar</button>
-
-      {responseMessage && <p>Resposta do backend: {responseMessage}</p>}
+        <div style={{ marginTop: 10 }}>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px' }}
+          />
+        </div>
+        <button type="submit" style={{ marginTop: 15, padding: '10px 20px' }}>
+          Cadastrar
+        </button>
+      </form>
+      {mensagem && <p style={{ marginTop: 20 }}>{mensagem}</p>}
     </div>
   );
 };
