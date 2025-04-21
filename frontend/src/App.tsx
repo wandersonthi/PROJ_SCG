@@ -1,57 +1,56 @@
-import { useState, useEffect } from 'react';
+// frontend/src/App.tsx
+import React, { useEffect, useState } from 'react';
 
-function App() {
-  // Estado para armazenar os dados da resposta
+const App: React.FC = () => {
   const [data, setData] = useState<any>(null);
+  const [name, setName] = useState<string>('');
+  const [responseMessage, setResponseMessage] = useState<string>('');
 
-  // Função para fazer a requisição para a API
+  // Requisição GET para buscar a data do banco
   useEffect(() => {
     fetch('http://localhost:5000/')
-      .then(response => response.json())
-      .then(data => setData(data)) // Armazena os dados da API no estado
-      .catch(error => console.error('Erro ao buscar dados:', error));
-  }, []); // O array vazio [] faz a requisição apenas uma vez, quando o componente é montado.
+      .then((response) => response.json())
+      .then((data) => setData(data))
+      .catch((error) => console.error('Erro ao buscar dados:', error));
+  }, []);
+
+  // Função para enviar dados via POST para o backend
+  const submitData = () => {
+    fetch('http://localhost:5000/data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: name }),
+    })
+      .then((response) => response.json())
+      .then((data) => setResponseMessage(data.message))
+      .catch((error) => console.error('Erro:', error));
+  };
 
   return (
-    <div className="text-center">
-      <header className="min-h-screen flex flex-col items-center justify-center bg-[#282c34] text-white text-[calc(10px+2vmin)]">
-        <h1 className="text-2xl">Sistema de Gestão de Cursos</h1>
+    <div>
+      <h1>Dados do Backend</h1>
+      {data ? (
+        <div>
+          <p>Data do banco: {data.now}</p>
+        </div>
+      ) : (
+        <p>Carregando...</p>
+      )}
 
-        {/* Exibindo dados ou uma mensagem de "Carregando..." */}
-        {data ? (
-          <p>Conexão bem-sucedida com o banco de dados: {data.now}</p>
-        ) : (
-          <p>Carregando dados...</p>
-        )}
+      <h2>Enviar dados para o backend</h2>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Digite seu nome"
+      />
+      <button onClick={submitData}>Enviar</button>
 
-        <img
-          src="https://reactjs.org/logo-og.png"
-          alt="logo"
-          className="h-[40vmin] pointer-events-none animate-[spin_20s_linear_infinite]"
-        />
-        
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://tanstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn TanStack
-        </a>
-      </header>
+      {responseMessage && <p>Resposta do backend: {responseMessage}</p>}
     </div>
   );
-}
+};
 
 export default App;
